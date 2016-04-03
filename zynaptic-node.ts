@@ -23,6 +23,23 @@
 
 /// <reference path="typings/main.d.ts" />
 
+
+/** DEEP TRAVERSAL
+ 
+ 
+ var findObjectByLabel = function(obj, label) {
+    if(obj.label === label) { return obj; }
+    for(var i in obj) {
+        if(obj.hasOwnProperty(i)){
+            var foundLabel = findObjectByLabel(obj[i], label);
+            if(foundLabel) { return foundLabel; }
+        }
+    }
+    return null;
+};
+ 
+ */
+
 const ROOT_NODE_NAME = "root";
 
 import { KeyValueModel } from "./core/key-value.model"
@@ -34,16 +51,20 @@ interface StructuredNode {
     ChildNodes: StructuredNode[];
 }
 
-class ZynapticNode implements StructuredNode {
+class ZynapticNode { // implements StructuredNode {
+	public parentNode: ZynapticNode = null;
     public nodeName: string; 
-    ChildNodes: StructuredNode[];
+    //ChildNodes: StructuredNode[];
+	public childNodes: ZynapticNode[];
 
-    constructor(nodeName?: string) {
+
+    constructor(nodeName?: string, parentNode?: ZynapticNode) {
 		if (nodeName === undefined) {
 			this.nodeName = ROOT_NODE_NAME;
 		}
-
-        this.ChildNodes = new Array<StructuredNode>(); 
+		
+		this.parentNode = parentNode;
+        this.childNodes =  []; 
     }
     
     get NodeName(): string {
@@ -56,10 +77,10 @@ class ZynapticNode implements StructuredNode {
 
     public newChildNode(nodeName?: string): ZynapticNode {
         var newNode = new ZynapticNode(nodeName);
-        this.ChildNodes.push(newNode);
+		console.log('NewNode', newNode);
 		
-		console.log()
-
+        this.childNodes.push(newNode, this);
+	
         return newNode;
     }
 	
