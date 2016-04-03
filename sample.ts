@@ -39,6 +39,10 @@ class ZynNode {
 		return childNode;
 	}
 	
+	public numberOfChildNodes(): number {
+		return this.childNodes.length;
+	}
+	
 	/**
 	 * 
 	 */
@@ -52,6 +56,9 @@ class ZynNode {
 		return childNode;
 	}
 	
+	/**
+	 * 
+	 */
 	public getFirstChildNodeName(): string {
 		var firstChildNodeName = "";
 		var firstChildNode = this.getFirstChild();
@@ -62,47 +69,59 @@ class ZynNode {
 		
 		return firstChildNodeName;
 	}
-
 	
+	/**
+	 * 
+	 */
 	public getLastChild(): ZynNode {
-		console.log("getLastChild");
 		var childNode: ZynNode = null;
 		var childNodes = this.childNodes;
 		
 		if (childNodes.length > 0) {
-			console.log("and there is children");
-
 			childNode = childNodes[childNodes.length-1];
 		}
 		
 		return childNode;		
 	}
 	
+	/**
+	 * 
+	 */
 	public isLastChild() {
-		var lastChild = true;
+		var lastChild = false;
 		
 		if (this.parentNode != null) {
+			var nodeIndex = this.parentNode.getChildNodeIndex(this);
+			if (nodeIndex == this.parentNode.numberOfChildNodes()-1) {
+				lastChild = true;	
+			}
 		}
 		
 		return lastChild;
 	}	
 	
+	/**
+	 * 
+	 */
 	public haveChildNodes(): boolean {
 		return this.getFirstChild != null;
 	}
 	
+	/**
+	 * 
+	 */
 	public getChildNodeIndex(node: ZynNode): number {
-		var index: number = -1;
+		var nodeIndex: number = -1;
 
 		for (var i = 0; i < this.childNodes.length; i++) {
 			var childNode = this.childNodes[i];
 			if (childNode === node) {
-				index = i;
+				nodeIndex = i;
 				break;	
 			}
 		}
 
-		return index;
+		return nodeIndex;
 	}	
 	
 	public getNextSibling(): ZynNode {
@@ -126,8 +145,13 @@ class ZynNode {
 		return node;
 	}
 	
-	public putAttribute(key: string, value: any): void {
+	/**
+	 * Return ZynNode to enable chaining when putting
+	 * attributes...
+	 */
+	public putAttribute(key: string, value: any): ZynNode {
 		this.attributes[key] = value;
+		return this;
 	}
 	
 	public hasAttributeName(name: string): boolean {
@@ -153,6 +177,8 @@ class ZynXmlNode extends ZynNode {
 }
 
 class ZynapticNodeSample {
+
+
 	terminal = term.TurboTerminal;
 	rootNode: ZynapticNode;
 	
@@ -169,9 +195,29 @@ class ZynapticNodeSample {
 	}
 
 	runSample() {
+		var xmlNode = new ZynXmlNode("root");
+		var products = xmlNode.addChildNode("products");
+			products.addChildNode("Zybaptic Turbo Terminal").putAttribute("1/5", 3);
+			var badger = products.addChildNode("Zybaptic Badger").putAttribute("1/5", 0);
+				var todo = badger.addChildNode("TODO");
+					todo.addChildNode("Recursive Directory Walker").putAttribute("progress", false);
+					todo.addChildNode("Fuzzy File Matcher").putAttribute("progress", 0.50);
+					todo.addChildNode("File String Finder").putAttribute("progress", "have a good idea for a solution");
+			products.addChildNode("Zybaptic View Engine").putAttribute("1/5", 0);
+			products.addChildNode("Zybaptic Node").putAttribute("1/5", 4);
+			
+		
+	}
+
+		
+		/*
 		var rootNode = new ZynNode("root");
 		var cpNode = rootNode.addChildNode("Zeppo");
 		var child1 = rootNode.addChildNode("child1");
+			var child1a = child1.addChildNode("child1a");
+			var child1b = child1.addChildNode("child1b");
+			var child1c = child1.addChildNode("child1c");
+
 		var child3 = rootNode.addChildNode("child3");
 		var child4 = rootNode.addChildNode("child4");
 		var child2 = rootNode.addChildNode("child2");
@@ -179,6 +225,12 @@ class ZynapticNodeSample {
 		child1.putAttribute("platform", "Windows");
 		
 		console.log("childIndex", rootNode.getChildNodeIndex(child2));
+		
+		if (child1c.isLastChild()) {
+			console.log("child1b is LAST");
+		} else {
+			console.log("child1b is NOT LAST");
+		}
 		
 		
 		var firstChild = rootNode.getFirstChild();
@@ -202,8 +254,8 @@ class ZynapticNodeSample {
 		console.log("child2 is last child", child2.isLastChild());
 
 		this.echoNodeList(rootNode.childNodes);
-		
 	}
+	*/
 }
 
 var zynNodeSample = new ZynapticNodeSample();
