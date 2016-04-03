@@ -11,7 +11,7 @@
  * PutteNode, written in Object Pascal, the original
  * implementation as well as C#, Java and Erlang
  * implementations can be found here:
- * www.patrikforsberg.net/zynaptic-node/implementations
+ * www.patrik.guru/zynaptic-node/implementations
  * 
  * In order to use this piece of software, this file header
  * must remain intact.
@@ -23,17 +23,26 @@
 
 /// <reference path="typings/main.d.ts" />
 
+const ROOT_NODE_NAME = "root";
+
+import { KeyValueModel } from "./core/key-value.model"
+
+// External Dependency
+//import { TurboTerminal } from "../zynaptic.turboterminal/turbo-terminal"
+
 interface StructuredNode {
     ChildNodes: StructuredNode[];
-
 }
 
-// Implementation
 class ZynapticNode implements StructuredNode {
-    private nodeName: string; 
+    public nodeName: string; 
     ChildNodes: StructuredNode[];
 
-    constructor(nodeName?:string) {
+    constructor(nodeName?: string) {
+		if (nodeName === undefined) {
+			this.nodeName = ROOT_NODE_NAME;
+		}
+
         this.ChildNodes = new Array<StructuredNode>(); 
     }
     
@@ -45,11 +54,35 @@ class ZynapticNode implements StructuredNode {
         this.nodeName = value;
     }
 
-    public newChildNode(): ZynapticNode {
-        var newNode = new ZynapticNode();
+    public newChildNode(nodeName?: string): ZynapticNode {
+        var newNode = new ZynapticNode(nodeName);
         this.ChildNodes.push(newNode);
+		
+		console.log()
+
         return newNode;
     }
+	
+	/********************************************************
+	 * 
+	 * 		Attribute Related Functionality
+	 * 
+	 ********************************************************/
+	public findAttribute(name: String): KeyValueModel {
+		var keyValuePair = null;
+		
+		return keyValuePair;	
+	}
+
+	public putAttrib(name: string, value: any) {
+		
+	}
+
+	public getAttributeValue(name: string): any {
+		
+	}
+	
+
 }
 
 export { ZynapticNode }
