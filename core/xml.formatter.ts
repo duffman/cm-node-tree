@@ -13,10 +13,10 @@ class ZynNodeXmlFormatter {
 	 * This function returns a string (XML) representation of the
 	 * node and it's children
 	*/
-	processNode(zynNode: ZynXmlNode, xmlString: string) {
+	processNode(zynNode: ZynXmlNode, xmlData: Array<string>) {
 		var previousNode: ZynXmlNode;
 		
-		xmlString += "<" + zynNode.nodeName;
+		xmlData.push("<" + zynNode.nodeName);
 		
 		/**
 		 * Append attributes
@@ -26,55 +26,34 @@ class ZynNodeXmlFormatter {
 		}
 	
 		if (!zynNode.haveChildNodes && !zynNode.empty()) {
-			xmlString += ">" + zynNode.nodeValue + "</" + zynNode.nodeName + ">";
+			xmlData.push(">" + zynNode.nodeValue + "</" + zynNode.nodeName + ">");
 		} else if (zynNode.haveChildNodes()) {
-			xmlString += ">";
+			xmlData.push(">");
 		} else if (!zynNode.haveChildNodes() && !zynNode.empty()) {
-			xmlString += "/>";
+			xmlData.push("/>");
 		}
 		
 		zynNode = zynNode.getFirstChild();
 		previousNode = null;
 		
 		while (zynNode != null) {
-			this.processNode(zynNode, xmlString);
+			this.processNode(zynNode, xmlData);
 			previousNode = zynNode;
 			zynNode = zynNode.getNextSibling();
 		}
 
 		if (previousNode != null && previousNode.parentNode != null) {
-			xmlString += "</" + previousNode.parentNode.nodeName + '>';
+			xmlData.push("</" + previousNode.parentNode.nodeName + '>');
 		}
 	}
 
 	public toXmlString() {
-		var node = (ZynXmlNode)this;
-		var xmlString: string = "";
+		var node = this.xmlRootNode;
+		var xmlData: Array<string>  = new Array<string>();
 		
 		while (node != null) {
-			this.processNode(node, xmlString);
-			node = node.
+			this.processNode(node, xmlData);
+			node = node.getNextSibling();
 		}
-		
 	}
-
-    // Single or double quoting
-    Quote := '"';
-    if (SingleQuote) then
-    	Quote := D_DELIM;
-
-	Node := Self;
-
-	while (Node<> nil) do
-	begin
-		ProcessNode(Node, Result);
-		Node := Node.GetNextSibling();
-
-	end; // end while
-
-
-end; // end TWfmXmlNode.PutAttrib		
-	}	
-	
-	
 }

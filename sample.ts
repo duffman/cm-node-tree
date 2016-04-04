@@ -32,9 +32,22 @@ class ZynapticNodeSample {
 			products.addChildNode("Zybaptic Node").putAttribute("1/5", 4);
 			
 		
-		console.log(this.xmlNode.getFirstChild().nodeName);
+		var firstChild = this.xmlNode.getFirstChild();
 		
+
+		
+		var nextSibling = firstChild.getNextSibling();
+
 	}
+	
+	printNode(name: string, node: ZynNode) {
+		if (node != null) {
+			console.log(name, node.nodeName);
+		} else {
+			console.log("firstChild IS null");
+		}		
+	}
+	
 }
 
 var zynNodeSample = new ZynapticNodeSample();

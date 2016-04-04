@@ -39,7 +39,17 @@ interface IAttributeList {
     [key: string]: any;
 };
 
-class ZynNode {
+interface IZynNode {
+	parentNode: ZynNode;
+	nodeName: string;
+	nodeValue: string;
+	childNodes: IZynArray;	
+	
+	addChildNode(name: string): ZynNode;
+	numberOfChildNodes(): number;
+}
+
+class ZynNode { //} implements IZynNode {
 	public parentNode: ZynNode = null;
 	public nodeName: string = "";
 	public nodeValue: string = "";
@@ -152,7 +162,7 @@ class ZynNode {
 		
 		if (this.parentNode != null) {
 			var nodeIndex = this.parentNode.getChildNodeIndex(this);
-			
+			console.log('>>> Node Index', nodeIndex);
 		}
 		
 		/*
