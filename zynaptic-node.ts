@@ -1,9 +1,8 @@
 /**
  *	@name Zynaptic Node
  *	@description	
- *	@date 2015-03-	2
- *	@author Patrik Forsberg <mail@patrik.guru>
- *	@web www.patrik.guru
+ *	@author Patrik Forsberg <mail@patrikforsberg.net>
+ *	@web www.patrikforsberg.net
  *	@copyright Patrik Forsberg, some rights reserved
  * 
  *	@history
@@ -11,7 +10,7 @@
  *	PutteNode, written in Object Pascal, the original
  *	implementation as well as C#, Java and Erlang,
  *	these implementations can be found here:
- *	www.patrik.guru/zynaptic-node/implementations
+ *	www.patrikforsberg.net/zynaptic-node/implementations
  * 
  *	In order to use this piece of software, this file header
  *	must remain intact.
@@ -23,12 +22,16 @@
 
 /// <reference path="typings/main.d.ts" />
 
+"use strict";
+
+const DEBUG = false;
+
 var term = require("../zynaptic.turboterminal/turbo-terminal");
 
 interface IZynArray {
-	[position: number]: ZynNode;
+	[position: number]: ZynapticNode;
 	length: number;
-	push(item: ZynNode): number;
+	push(item: ZynapticNode): number;
 }
 
 interface IAttributeList {
@@ -36,35 +39,35 @@ interface IAttributeList {
     [key: string]: any;
 };
 
-interface IZynNode {
-	parentNode: ZynNode;
+interface IZynapticNode {
+	parentNode: ZynapticNode;
 	nodeName: string;
 	nodeValue: string;
 	childNodes: IZynArray;	
-	addChildNode(name: string): ZynNode;
-	numberOfChildNodes(): number;
+	addChildNode(name: string): ZynapticNode;
+	childCount(): number;
 }
 
-class ZynNode { //} implements IZynNode {
-	public parentNode: ZynNode = null;
+class ZynapticNode {
+	public parentNode: ZynapticNode = null;
 	public nodeName: string = "";
 	public nodeValue: string = "";
-	public childNodes: IZynArray = new Array<ZynNode>();
+	public childNodes: IZynArray = new Array<ZynapticNode>();
 	private attributes: IAttributeList = [{}];
 		
-	constructor(name: string, parent?: ZynNode) {
+	constructor(name: string, parent?: ZynapticNode) {
 		this.nodeName = name;		
 		this.parentNode = parent;
 	}
 	
-	public addChildNode(name: string): ZynNode {
-		var childNode = new ZynNode(name, this);
+	public addChildNode(name: string): ZynapticNode {
+		var childNode = new ZynapticNode(name, this);
 		this.childNodes.push(childNode);
 		
 		return childNode;
 	}
 	
-	public numberOfChildNodes(): number {
+	public childCount(): number {
 		return this.childNodes.length;
 	}
 	
@@ -75,7 +78,7 @@ class ZynNode { //} implements IZynNode {
 	/**
 	 * 
 	 */
-	public getFirstChild(): ZynNode {
+	public getFirstChild(): ZynapticNode {
 		if (this.childNodes.length > 0) {
 			return this.childNodes[0];
 		}
@@ -99,8 +102,8 @@ class ZynNode { //} implements IZynNode {
 	/**
 	 * 
 	 */
-	public getLastChild(): ZynNode {
-		var childNode: ZynNode = null;
+	public getLastChild(): ZynapticNode {
+		var childNode: ZynapticNode = null;
 		var childNodes = this.childNodes;
 		
 		if (childNodes.length > 0) {
@@ -118,7 +121,7 @@ class ZynNode { //} implements IZynNode {
 		
 		if (this.parentNode != null) {
 			var nodeIndex = this.parentNode.getChildNodeIndex(this);
-			if (nodeIndex == this.parentNode.numberOfChildNodes()-1) {
+			if (nodeIndex == this.parentNode.childCount()-1) {
 				lastChild = true;	
 			}
 		}
@@ -130,17 +133,16 @@ class ZynNode { //} implements IZynNode {
 	 * 
 	 */
 	public haveChildNodes(): boolean {
-		return this.getFirstChild != null;
+		return this.getFirstChild() != null;
 	}
 	
 	/**
 	 * 
 	 */
-	public getChildNodeIndex(node: ZynNode): number {
+	public getChildNodeIndex(node: ZynapticNode): number {
 		var nodeIndex: number = -1;
 
 		for (var i = 0; i < this.childNodes.length; i++) {
-//		for (var index in this.childNodes) {
 			var childNode = this.childNodes[i];
 			if (childNode === node) {
 				nodeIndex = i;
@@ -151,8 +153,16 @@ class ZynNode { //} implements IZynNode {
 		return nodeIndex;
 	}	
 
-	public getPreviousSibling(): ZynNode {
-		var node: ZynNode = null;
+	public numberOfSiblings(): number {
+		var siblingsCount = 0;
+		if (this.parentNode != null) {
+			siblingsCount = this.parentNode.childCount();
+		}
+		return siblingsCount;
+	}
+
+	public getPreviousSibling(): ZynapticNode {
+		var node: ZynapticNode = null;
 	
 		if (this.parentNode != null) {
 			var nodeIndex = this.parentNode.getChildNodeIndex(this);
@@ -165,12 +175,13 @@ class ZynNode { //} implements IZynNode {
 		return node;
 	}
 	
-	public getNextSibling(): ZynNode {
-		var node: ZynNode = null;
+	public getNextSibling(): ZynapticNode {
+		var node: ZynapticNode = null;
 		
 		if (this.parentNode != null) {
 			var nodeIndex = this.parentNode.getChildNodeIndex(this);
-			console.log('>>> Node Index', nodeIndex);
+
+			if (DEBUG) console.log('>>> getNextSibling > Node Index', nodeIndex);
 			
 			var nextNodeIndex = nodeIndex+1;
 			var numberOfSiblings = this.parentNode.childNodes.length;
@@ -183,8 +194,8 @@ class ZynNode { //} implements IZynNode {
 		return node;
 	}
 	
-	public getChildNodeByName(name: string, ignoreCase?: boolean): ZynNode {
-		var node: ZynNode = null;
+	public getChildNodeByName(name: string, ignoreCase?: boolean): ZynapticNode {
+		var node: ZynapticNode = null;
 
 		// TODO: Do a more thorough investigation on the perfomance impacts
 		// of using Regular Expressions for comparison method 
@@ -210,7 +221,7 @@ class ZynNode { //} implements IZynNode {
 	 * Return ZynNode to enable chaining when putting
 	 * attributes...
 	 */
-	public putAttribute(key: string, value: any): ZynNode {
+	public putAttribute(key: string, value: any): ZynapticNode {
 		this.attributes[key] = value;
 		return this;
 	}
@@ -220,7 +231,7 @@ class ZynNode { //} implements IZynNode {
 	}
 
 	public getNodesWithAttribute(attributeName: string): IZynArray {
-		var nodes: IZynArray = new Array<ZynNode>();
+		var nodes: IZynArray = new Array<ZynapticNode>();
 		
 		return nodes;
 	}
@@ -231,10 +242,10 @@ class ZynNode { //} implements IZynNode {
 }
 
 // -- Sample XML Document -- //
-class ZynXmlNode extends ZynNode {
-	constructor(name: string, parent?: ZynNode) {
+class ZynXmlNode extends ZynapticNode {
+	constructor(name: string, parent?: ZynapticNode) {
 		super(name, parent);
 	}	
 }
 
-export { ZynNode, ZynXmlNode, IZynArray }
+export { ZynapticNode, ZynXmlNode, IZynArray }

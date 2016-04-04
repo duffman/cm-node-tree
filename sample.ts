@@ -3,7 +3,8 @@ var path = require("path");
 var fs = require("fs");
 var term = require("../zynaptic.turboterminal/turbo-terminal");
 
-import { ZynNode, ZynXmlNode, IZynArray } from "./zynaptic-node";
+import { ZynapticNode, ZynXmlNode, IZynArray } from "./zynaptic-node";
+import { ZynapticNodeXmlFormatter } from "./formatters/zynaptic-node-xml.formatter";
 
 class ZynapticNodeSample {
 	terminal = term.TurboTerminal;
@@ -36,22 +37,22 @@ class ZynapticNodeSample {
 		
 		for (var index in fileContents) {
 			var line = fileContents[index];
-			console.log(line);
+			node.addChildNode(line);
 		}
 		
-		
-		fileContents = null;
+		//fileContents = null;
 		
 		return node;
 	}
 
 	runSample() {
+		// console.log("animals have " + animals.childCount() + " siblings");
+
 		this.xmlNode = new ZynXmlNode("root");
 		var cars = this.xmlNode.addChildNode("Cars");
 
 		var animals = this.xmlNode.addChildNode("Animals");
 		this.addChildrenFromFile(animals, "animals.txt");
-
 
 		var artists = this.xmlNode.addChildNode("Artists");
 		var countries = this.xmlNode.addChildNode("Countries");
@@ -66,7 +67,7 @@ class ZynapticNodeSample {
 					todo.addChildNode("Fuzzy File Matcher").putAttribute("progress", 0.50);
 					todo.addChildNode("File String Finder").putAttribute("progress", "have a good idea for a solution");
 			misc.addChildNode("Zybaptic View Engine").putAttribute("1/5", 0);
-			misc.addChildNode("Zybaptic Node").putAttribute("1/5", 4);
+			misc.addChildNode("Zybaptic Node").nodeValue = "Pokpok";
 			
 		var firstChild = this.xmlNode.getFirstChild();
 		
@@ -76,11 +77,18 @@ class ZynapticNodeSample {
 		var previousSibling = nextSibling.getPreviousSibling();
 
 		this.printNode("nextSibling", nextSibling);
-		this.printNode("nextSibling", nextSibling);
+		this.printNode("previousSibling", previousSibling);
+
+
+		var xmlFormatter = new ZynapticNodeXmlFormatter();
+		xmlFormatter.assignNode(this.xmlNode);
+		var xmlData = xmlFormatter.toString();
+		
+		console.log("xmlData", xmlData);
 
 	}
 	
-	printNode(name: string, node: ZynNode) {
+	printNode(name: string, node: ZynapticNode) {
 		if (node != null) {
 			console.log(name, node.nodeName);
 		} else {
