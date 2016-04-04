@@ -21,12 +21,9 @@
  *	https://creativecommons.org
 */
 
-var term = require("../zynaptic.turboterminal/turbo-terminal");
+/// <reference path="typings/main.d.ts" />
 
-/**
- * 	Sample 1: Creating a structured node tree using the
- *	Zynaptic Node implementation
- */
+var term = require("../zynaptic.turboterminal/turbo-terminal");
 
 interface IZynArray {
 	[position: number]: ZynNode;
@@ -44,7 +41,6 @@ interface IZynNode {
 	nodeName: string;
 	nodeValue: string;
 	childNodes: IZynArray;	
-	
 	addChildNode(name: string): ZynNode;
 	numberOfChildNodes(): number;
 }
@@ -80,13 +76,10 @@ class ZynNode { //} implements IZynNode {
 	 * 
 	 */
 	public getFirstChild(): ZynNode {
-		var childNode: ZynNode = null;
-		
 		if (this.childNodes.length > 0) {
-			childNode = this.childNodes[0];
+			return this.childNodes[0];
 		}
-		
-		return childNode;
+		return null;
 	}
 	
 	/**
@@ -147,6 +140,7 @@ class ZynNode { //} implements IZynNode {
 		var nodeIndex: number = -1;
 
 		for (var i = 0; i < this.childNodes.length; i++) {
+//		for (var index in this.childNodes) {
 			var childNode = this.childNodes[i];
 			if (childNode === node) {
 				nodeIndex = i;
@@ -156,6 +150,20 @@ class ZynNode { //} implements IZynNode {
 
 		return nodeIndex;
 	}	
+
+	public getPreviousSibling(): ZynNode {
+		var node: ZynNode = null;
+	
+		if (this.parentNode != null) {
+			var nodeIndex = this.parentNode.getChildNodeIndex(this);
+			var previousNodeIndex = nodeIndex-1;
+			if (previousNodeIndex>-1) {
+				node = this.parentNode.childNodes[previousNodeIndex];
+			}
+		}	
+	
+		return node;
+	}
 	
 	public getNextSibling(): ZynNode {
 		var node: ZynNode = null;
@@ -163,18 +171,38 @@ class ZynNode { //} implements IZynNode {
 		if (this.parentNode != null) {
 			var nodeIndex = this.parentNode.getChildNodeIndex(this);
 			console.log('>>> Node Index', nodeIndex);
+			
+			var nextNodeIndex = nodeIndex+1;
+			var numberOfSiblings = this.parentNode.childNodes.length;
+			
+			if (nodeIndex>-1 && nextNodeIndex <= numberOfSiblings-1) {
+				node = this.parentNode.childNodes[nextNodeIndex];
+			}
 		}
 		
-		/*
-	if (Parent<>nil) then
-		begin
-			myIdx := Parent.ChildNodes.IndexOf(Self);
-			if (myIdx>-1) and (myIdx+1<=Parent.ChildNodes.Count-1) then
-				Result := Parent.ChildNodes[myIdx+1];
+		return node;
+	}
+	
+	public getChildNodeByName(name: string, ignoreCase?: boolean): ZynNode {
+		var node: ZynNode = null;
 
-		end; // end if
-		*/
-		
+		// TODO: Do a more thorough investigation on the perfomance impacts
+		// of using Regular Expressions for comparison method 
+		for (var index in this.childNodes) {
+			var childNode = this.childNodes[index];
+			var childNodeName = childNode.nodeName;
+			
+			if (ignoreCase) {
+				name = name.toLowerCase();
+				childNodeName = childNodeName.toLowerCase();
+			}
+			
+			if (name === childNodeName) {
+				node = childNode;
+				break;
+			}
+		}
+
 		return node;
 	}
 	
