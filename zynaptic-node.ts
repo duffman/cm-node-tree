@@ -1,6 +1,7 @@
 /**
  *	@name Zynaptic Node
- *	@description	
+ *	@version 0.8	
+ *	@date 2016-04-04
  *	@author Patrik Forsberg <mail@patrikforsberg.net>
  *	@web www.patrikforsberg.net
  *	@copyright Patrik Forsberg, some rights reserved
@@ -24,37 +25,33 @@
 
 "use strict";
 
-const DEBUG = false;
-
-var term = require("../zynaptic.turboterminal/turbo-terminal");
-
-interface IZynArray {
+interface IZynapticNodeList {
 	[position: number]: ZynapticNode;
 	length: number;
 	push(item: ZynapticNode): number;
 }
 
-interface IAttributeList {
-	length: number;
-    [key: string]: any;
-};
+interface INodeAttribute {
+	name: string;
+	value: string;
+}
 
 interface IZynapticNode {
 	parentNode: ZynapticNode;
 	nodeName: string;
 	nodeValue: string;
-	childNodes: IZynArray;	
+	childNodes: IZynapticNodeList;	
 	addChildNode(name: string): ZynapticNode;
 	childCount(): number;
 }
 
-class ZynapticNode {
+class ZynapticNode implements IZynapticNode {
 	public parentNode: ZynapticNode = null;
 	public nodeName: string = "";
 	public nodeValue: string = "";
-	public childNodes: IZynArray = new Array<ZynapticNode>();
-	private attributes: IAttributeList = [{}];
-		
+	public childNodes: IZynapticNodeList = new Array<ZynapticNode>();
+	public attributes: INodeAttribute[] = new Array<INodeAttribute>(); 
+	
 	constructor(name: string, parent?: ZynapticNode) {
 		this.nodeName = name;		
 		this.parentNode = parent;
@@ -75,9 +72,6 @@ class ZynapticNode {
 		return this.nodeValue.length == 0;
 	}
 	
-	/**
-	 * 
-	 */
 	public getFirstChild(): ZynapticNode {
 		if (this.childNodes.length > 0) {
 			return this.childNodes[0];
@@ -85,9 +79,6 @@ class ZynapticNode {
 		return null;
 	}
 	
-	/**
-	 * 
-	 */
 	public getFirstChildNodeName(): string {
 		var firstChildNodeName = "";
 		var firstChildNode = this.getFirstChild();
@@ -99,9 +90,6 @@ class ZynapticNode {
 		return firstChildNodeName;
 	}
 	
-	/**
-	 * 
-	 */
 	public getLastChild(): ZynapticNode {
 		var childNode: ZynapticNode = null;
 		var childNodes = this.childNodes;
@@ -113,9 +101,6 @@ class ZynapticNode {
 		return childNode;		
 	}
 	
-	/**
-	 * 
-	 */
 	public isLastChild() {
 		var lastChild = false;
 		
@@ -129,16 +114,10 @@ class ZynapticNode {
 		return lastChild;
 	}	
 	
-	/**
-	 * 
-	 */
 	public haveChildNodes(): boolean {
 		return this.getFirstChild() != null;
 	}
 	
-	/**
-	 * 
-	 */
 	public getChildNodeIndex(node: ZynapticNode): number {
 		var nodeIndex: number = -1;
 
@@ -181,8 +160,6 @@ class ZynapticNode {
 		if (this.parentNode != null) {
 			var nodeIndex = this.parentNode.getChildNodeIndex(this);
 
-			if (DEBUG) console.log('>>> getNextSibling > Node Index', nodeIndex);
-			
 			var nextNodeIndex = nodeIndex+1;
 			var numberOfSiblings = this.parentNode.childNodes.length;
 			
@@ -230,22 +207,9 @@ class ZynapticNode {
 		return (this.childNodes[name] != undefined);
 	}
 
-	public getNodesWithAttribute(attributeName: string): IZynArray {
-		var nodes: IZynArray = new Array<ZynapticNode>();
-		
-		return nodes;
-	}
-
 	public getAttribute(key: string): any {
 		return this.attributes[key];
 	}
 }
 
-// -- Sample XML Document -- //
-class ZynXmlNode extends ZynapticNode {
-	constructor(name: string, parent?: ZynapticNode) {
-		super(name, parent);
-	}	
-}
-
-export { ZynapticNode, ZynXmlNode, IZynArray }
+export { ZynapticNode, IZynapticNodeList }
