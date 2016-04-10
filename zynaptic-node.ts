@@ -1,24 +1,10 @@
 /**
  *	@name Zynaptic Node
- *	@version 0.8	
- *	@date 2016-04-04
- *	@author Patrik Forsberg <mail@patrikforsberg.net>
- *	@web www.patrikforsberg.net
- *	@copyright Patrik Forsberg, some rights reserved
- * 
- *	@history
- *	TypeScript implementation of my old work horse
- *	PutteNode, written in Object Pascal, the original
- *	implementation as well as C#, Java and Erlang,
- *	these implementations can be found here:
- *	www.patrikforsberg.net/zynaptic-node/implementations
+ *	@author Patrik Forsberg <mail@patrik.guru>
+ *	@web https://github.com/duffman/zynaptic.node
  * 
  *	In order to use this piece of software, this file header
  *	must remain intact.
- * 
- *	Zynaptic Node is licensed under the Creative Commons
- *	### License, for more information, follow this link:
- *	https://creativecommons.org
 */
 
 /// <reference path="typings/main.d.ts" />

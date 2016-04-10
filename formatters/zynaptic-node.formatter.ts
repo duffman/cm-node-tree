@@ -1,7 +1,7 @@
 /**
  *	ZynapticNode
- *	@author Patrik Forsberg <mail@patrikforsberg.net>
- *	@web www.patrikforsberg.net
+ *	@author Patrik Forsberg <mail@patrik.guru>
+ *	@web https://github.com/duffman/zynaptic.node
  */
 
 /// <reference path="../typings/main.d.ts" />
