@@ -4,15 +4,10 @@
  *	@web https://github.com/duffman/zynaptic.node
  */
 
-/// <reference path="../typings/main.d.ts" />
-
-"use strict";
-
 import { ZynapticNode } from "../zynaptic-node"
 
-interface IZynapticNodeFormatter {
-	assignNode(node: ZynapticNode);
+export interface IZynSerializer {
 	toString(): string;
 }
 
-export { IZynapticNodeFormatter }
+export interface IZynDeserializer {}

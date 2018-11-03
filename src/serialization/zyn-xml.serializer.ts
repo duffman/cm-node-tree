@@ -4,49 +4,46 @@
  *	@web https://github.com/duffman/zynaptic.node
  */
 
-/// <reference path="../typings/main.d.ts" />
+
+
+/// <reference path="../../typings/main.d.ts" />
 
 "use strict";
 
-import { ZynapticNode } from "../zynaptic-node";
-import { IZynapticNodeFormatter } from "./zynaptic-node.formatter";
+import { IZynNode, ZynapticNode } from "../zynaptic-node";
+import { IZynSerializer } from "./zyn-serializer";
 
-class ZynapticNodeXmlFormatter implements IZynapticNodeFormatter {
-	xmlRootNode: ZynapticNode;
-	
-	constructor() { }
-
-	public assignNode(node: ZynapticNode) {
-		this.xmlRootNode = node;
-	}
+class ZynNodeXmlFormatter implements IZynSerializer {
+	constructor(public xmlRootNode: IZynNode) {}
 
 	/**
 	 * This function returns a string (XML) representation of the
 	 * node and it's children
 	*/
-	processNode(zynNode: ZynapticNode, xmlData: Array<string>) {
-		var previousNode: ZynapticNode;
+	processNode(zynNode: IZynNode, xmlData: Array<string>) {
+		let previousNode: IZynNode;
 				
 		xmlData.push("<" + zynNode.nodeName);
-		
+
 		/**
-		 * Append attributes
+		 * Append props
 		 */
-		for (var attrName in zynNode.attributes) {
-			var attrValue = zynNode.attributes[attrName];
-						
-			xmlData.push(" ");
-			xmlData.push(attrName);
-			xmlData.push('="');
-			xmlData.push(attrValue.toString());
-			xmlData.push('"');
+		if (zynNode.haveProps()) {
+			for (let pInd = 0; pInd < zynNode.props.count(); pInd++) {
+				let prop = zynNode.props.getAt(pInd);
+				xmlData.push(" ");
+				xmlData.push(prop.name);
+				xmlData.push('="');
+				xmlData.push(prop.strVal());
+				xmlData.push('"');
+			}
 		}
-	
-		if (!zynNode.haveChildNodes() && !zynNode.empty()) {
+
+		if (!zynNode.haveChildNodes() && !zynNode.isEmpty()) {
 			xmlData.push(">" + zynNode.nodeValue + "</" + zynNode.nodeName + ">");
 		} else if (zynNode.haveChildNodes()) {
 			xmlData.push(">");
-		} else if (!zynNode.haveChildNodes() && zynNode.empty()) {
+		} else if (!zynNode.haveChildNodes() && zynNode.isEmpty()) {
 			xmlData.push("/>");
 		}
 		
@@ -79,4 +76,4 @@ class ZynapticNodeXmlFormatter implements IZynapticNodeFormatter {
 	}
 }
 
-export { ZynapticNodeXmlFormatter }
+export { ZynNodeXmlFormatter }
