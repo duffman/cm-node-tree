@@ -1,5 +1,5 @@
 # Zynaptic Node
-Zynaptic Node is a FAST, LIGHTWEIGHT **Type Script** implementation of a data contaomer for working
+Zynaptic Node is a FAST, LIGHTWEIGHT **Type Script** implementation of a data container for working
 with Hierarchial Data sets, (parent -> child relational data) such as
 **XML** ,**JSON**, **YAML**, **Directory Strutures** and so on.
 
@@ -27,7 +27,7 @@ alert(s);
 
 ## Samples
 Please see the samples folder located in the repo, I have implemented a few use
-cases to that will give yo ua pretty good idea of how you can make use of Zynaptic Node
+cases to that will give yo ua pretty good idea of how you can make use of Zynaptic Nodea
 
 
 ### Simple Demo
