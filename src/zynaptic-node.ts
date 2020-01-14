@@ -79,7 +79,6 @@ export class ZynapticNode implements IZynNode {
 		return this;
 	}
 
-
 	public addChild(child: ZynapticNode): ZynapticNode {
 		this.childNodes.push(child);
 		return child;
@@ -107,14 +106,14 @@ export class ZynapticNode implements IZynNode {
 	public getFirstChildNodeName(): string {
 		let firstChildNodeName = "";
 		let firstChildNode = this.getFirstChild();
-		
+
 		if (firstChildNode != null) {
 			firstChildNodeName = firstChildNode.nodeName;
 		}
-		
+
 		return firstChildNodeName;
 	}
-	
+
 	public getLastChild(): ZynapticNode {
 		let childNode: ZynapticNode = null;
 		let childNodes = this.childNodes;

@@ -1,7 +1,7 @@
 
 
-import {IZynapticStore} from "../interfaces/zyn-store";
-import {IZynNode} from "../zynaptic-node";
+import { IZynapticStore }         from "../interfaces/zyn-store";
+import { IZynNode }               from "../zynaptic-node";
 
 export class ZynLocalStorage implements IZynapticStore {
 	public saveData(node: IZynNode): boolean {

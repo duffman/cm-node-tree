@@ -1,8 +1,8 @@
 
-import {ZynapticNode} from "../zynaptic-node";
-import {ZynNodeXmlFormatter} from "../serialization/zyn-xml.serializer";
-import {ZynJSON} from "../utils/zyn-json";
-import {ZynNodeSerializer} from "../serialization/zyn-json-serializer";
+import { ZynapticNode }           from "../zynaptic-node";
+import { ZynNodeXmlFormatter }     from "../serialization/zyn-xml.serializer";
+import { ZynJSON }                 from "../utils/zyn-json";
+import { ZynNodeSerializer} from "../serialization/zyn-json-serializer";
 
 export class ZynStoreCore {
 

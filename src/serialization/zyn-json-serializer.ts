@@ -24,7 +24,6 @@ export class ZynNodeDeserializer implements IZynDeserializer {
 		this.currState = ParserState.None;
 	}
 
-
 	// {"ro":{"Nisse":{"@age":"12","@gender":"male","Olle":{"Uffe":[]}},"Kalle":{"F1":"Knurre"}}}
 	public parse(): IZynNode {
 		function next(): string {
@@ -33,9 +32,7 @@ export class ZynNodeDeserializer implements IZynDeserializer {
 			return this.lookChar;
 		}
 
-		if (next().)
-
-
+		//if (next().)
 
 		let res = new ZynapticNode();
 		return res;

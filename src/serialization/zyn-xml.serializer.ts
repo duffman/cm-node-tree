@@ -4,14 +4,8 @@
  *	@web https://github.com/duffman/zynaptic.node
  */
 
-
-
-/// <reference path="../../typings/main.d.ts" />
-
-"use strict";
-
-import { IZynNode, ZynapticNode } from "../zynaptic-node";
-import { IZynSerializer } from "./zyn-serializer";
+import { IZynNode }               from "../zynaptic-node";
+import { IZynSerializer }         from "./zyn-serializer";
 
 class ZynNodeXmlFormatter implements IZynSerializer {
 	constructor(public xmlRootNode: IZynNode) {}
@@ -22,7 +16,7 @@ class ZynNodeXmlFormatter implements IZynSerializer {
 	*/
 	processNode(zynNode: IZynNode, xmlData: Array<string>) {
 		let previousNode: IZynNode;
-				
+
 		xmlData.push("<" + zynNode.nodeName);
 
 		/**
@@ -46,10 +40,10 @@ class ZynNodeXmlFormatter implements IZynSerializer {
 		} else if (!zynNode.haveChildNodes() && zynNode.isEmpty()) {
 			xmlData.push("/>");
 		}
-		
+
 		zynNode = zynNode.getFirstChild();
 		previousNode = null;
-		
+
 		while (zynNode != null) {
 			this.processNode(zynNode, xmlData);
 			previousNode = zynNode;
@@ -64,14 +58,14 @@ class ZynNodeXmlFormatter implements IZynSerializer {
 	public toString(): string {
 		var node = this.xmlRootNode;
 		var xmlData: string[]  = new Array<string>();
-		
+
 		xmlData.push('<?xml version="1.0" standalone="yes" ?>');
-		
+
 		while (node != null) {
 			this.processNode(node, xmlData);
 			node = node.getNextSibling();
 		}
-		
+
 		return xmlData.join("");
 	}
 }
